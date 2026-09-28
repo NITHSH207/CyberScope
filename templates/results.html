@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}CyberScope · Results{% endblock %}
+{% block content %}
+<section class="result-top"><div><span class="overline">ASSESSMENT COMPLETE</span><h1>Scan intelligence</h1><p>{{ target }} · {{ scan_profile }}</p></div><a class="outline-btn" href="{{ url_for('index') }}">＋ New scan</a></section>
+
+<div class="metric-grid"><div><small>HOSTS</small><b>{{ result.hosts|length }}</b></div><div><small>SERVICES</small><b>{{ result.services|length }}</b></div><div><small>TCP</small><b>{{ result.services|selectattr("protocol", "equalto", "TCP")|list|length }}</b></div><div><small>UDP</small><b>{{ result.services|selectattr("protocol", "equalto", "UDP")|list|length }}</b></div><div><small>DURATION</small><b>{{ "%.2f"|format(duration) }}s</b></div></div>
+{% if result.scan_note %}<div class="flash warning"><b>Scan note:</b> {{ result.scan_note }}</div>{% endif %}
+
+{% for host in result.hosts %}
+<section class="card result-card"><div class="section-head"><div><span class="num">HOST</span><div><small>DISCOVERED HOST</small><h2>{{ host.address }}</h2></div></div><span class="state">{{ host.state }}</span></div><div class="host-info"><div><small>HOSTNAME</small><b>{{ host.hostname or 'N/A' }}</b></div><div><small>OPERATING SYSTEM</small><b>{{ host.os }}</b></div></div></section>
+{% endfor %}
+
+<section class="card result-card"><div class="section-head"><div><span class="num">03</span><div><small>DISCOVERY</small><h2>Port & service details</h2></div></div></div><div class="table-wrap"><table><thead><tr><th>PORT</th><th>PROTO</th><th>STATE</th><th>SERVICE</th><th>VERSION</th></tr></thead><tbody>{% for item in result.services %}<tr><td class="mono">{{ item.port }}</td><td>{{ item.protocol }}</td><td><span class="state-text">{{ item.state }}</span></td><td>{{ item.name }}</td><td>{{ (item.product ~ ' ' ~ item.version ~ ' ' ~ item.extrainfo).strip() or 'Not reported' }}</td></tr>{% else %}<tr><td colspan="5" class="empty">No open services reported.</td></tr>{% endfor %}</tbody></table></div></section>
+
+<section class="card result-card"><div class="section-head"><div><span class="num">04</span><div><small>EXPORT CENTER</small><h2>Reports & sharing</h2></div></div></div><div class="report-grid"><a href="{{ url_for('reports', filename=report_file) }}"><b>HTML</b><span>Generate HTML Report</span></a><a href="{{ url_for('reports', filename=pdf_report_file) }}"><b>PDF</b><span>Download PDF Report</span></a><a href="{{ url_for('reports', filename=xml_report_file) }}"><b>XML</b><span>Download XML Report</span></a></div><form method="post" action="{{ url_for('email_report') }}" class="email-form"><input type="hidden" name="report_file" value="{{ pdf_report_file }}"><label for="recipient">Email Report</label><div><input id="recipient" name="recipient" type="email" placeholder="recipient@example.com" required><button class="outline-btn" type="submit">Send PDF</button></div><p class="hint">SMTP: CYBERSCOPE_EMAIL, CYBERSCOPE_EMAIL_PASSWORD, CYBERSCOPE_SMTP_SERVER, CYBERSCOPE_SMTP_PORT.</p></form></section>
+
+<section class="card result-card"><div class="section-head"><div><span class="num">05</span><div><small>DEFENSIVE REVIEW</small><h2>Recommendations</h2></div></div></div><ul class="recommendations">{% for tip in tips %}<li>{{ tip }}</li>{% endfor %}</ul></section>
+{% endblock %}

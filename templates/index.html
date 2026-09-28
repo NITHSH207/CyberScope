@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}CyberScope · Scanner{% endblock %}
+{% block content %}
+<section class="top-intro">
+  <div><span class="overline">SECURITY OPERATIONS / SCANNER</span><h1>Network visibility,<br><em>without the clutter.</em></h1><p>Run an authorized Nmap assessment, inspect discovered services, and export a complete security report from one workspace.</p></div>
+  <div class="live-card"><span class="pulse"></span><small>ENGINE STATUS</small><strong>READY</strong><span>Nmap integration online</span></div>
+</section>
+
+<form method="post" class="workspace-grid">
+  <section class="card target-card">
+    <div class="section-head"><div><span class="num">01</span><div><small>SCAN TARGET</small><h2>Choose a target</h2></div></div><span class="tag">AUTHORIZED</span></div>
+    <label for="target">IP address or hostname</label>
+    <div class="target-field"><span>↗</span><input id="target" name="target" placeholder="127.0.0.1" autocomplete="off" required><kbd>LOCAL</kbd></div>
+    <p class="hint">Use localhost or a private/local system that you have permission to test.</p>
+  </section>
+
+  <section class="card options-card">
+    <div class="section-head"><div><span class="num">02</span><div><small>SCAN PROFILE</small><h2>Scanning Options</h2></div></div><span class="tag muted">NMAP</span></div>
+    <div class="option-list">
+      {% set options = [
+        ("tcp", "TCP Scan", "Standard TCP connect discovery", "TCP"),
+        ("udp", "UDP Scan", "Discover UDP services", "UDP"),
+        ("syn", "SYN Scan", "Half-open TCP discovery", "SYN"),
+        ("version", "Service Version Detection", "Identify service versions", "SVC"),
+        ("os", "OS Detection", "Fingerprint operating system", "OS"),
+        ("aggressive", "Aggressive Scan", "Enable Nmap aggressive mode", "ADV")
+      ] %}
+      {% for value, label, desc, badge in options %}
+      <label class="option-row"><input type="checkbox" name="scan_options" value="{{ value }}" {% if value in ['tcp','version'] %}checked{% endif %}><span class="fake-check"></span><span class="option-main"><b>{{ label }}</b><small>{{ desc }}</small></span><span class="option-badge">{{ badge }}</span></label>
+      {% endfor %}
+    </div>
+    <div class="runbar"><div><b>Top 1000 ports</b><span>Timing T3 · selected modules only</span></div><button type="submit">Launch scan <span>→</span></button></div>
+  </section>
+</form>
+
+<section class="capabilities">
+  <div><span>HTML</span><b>Generate HTML Report</b><small>Browser-ready results</small></div>
+  <div><span>PDF</span><b>Download PDF Report</b><small>Portable report</small></div>
+  <div><span>XML</span><b>Download XML Report</b><small>Structured data</small></div>
+  <div><span>@</span><b>Email Report</b><small>Send generated PDF</small></div>
+</section>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}CyberScope · History{% endblock %}
+{% block content %}
+<section class="result-top"><div><span class="overline">WORKSPACE / HISTORY</span><h1>Previous scans</h1><p>Saved assessment activity from this CyberScope instance.</p></div><a class="outline-btn" href="{{ url_for('index') }}">＋ New scan</a></section>
+<section class="card result-card"><div class="table-wrap"><table><thead><tr><th>TARGET</th><th>DATE</th><th>DURATION</th><th>SERVICES</th><th>REPORT</th></tr></thead><tbody>{% for scan in scans %}<tr><td class="mono">{{ scan.target }}</td><td>{{ scan.timestamp }}</td><td>{{ "%.2f"|format(scan.duration) }}s</td><td>{{ scan.services }}</td><td><a href="{{ url_for('reports', filename=scan.report_file) }}">HTML</a></td></tr>{% else %}<tr><td colspan="5" class="empty">No scans saved yet.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}
