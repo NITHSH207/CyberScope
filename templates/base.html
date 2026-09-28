@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d14">
+  <title>{% block title %}CyberScope{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="logo" href="{{ url_for('index') }}"><span class="logo-box">CS</span><span><b>CyberScope</b><small>Network Intelligence</small></span></a>
+    <div class="side-label">WORKSPACE</div>
+    <nav>
+      <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}"><span>⌁</span> Scanner</a>
+      <a class="nav-item {% if request.endpoint == 'history' %}active{% endif %}" href="{{ url_for('history') }}"><span>◷</span> Scan History</a>
+    </nav>
+    <div class="side-status"><i></i><div><b>Scanner ready</b><small>Authorized targets only</small></div></div>
+  </aside>
+
+  <main class="main">
+    <header class="mobile-head"><a class="logo" href="{{ url_for('index') }}"><span class="logo-box">CS</span><b>CyberScope</b></a></header>
+    {% with messages=get_flashed_messages() %}
+      {% for message in messages %}<div class="flash">{{ message }}</div>{% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+    <footer>CyberScope · local / authorized security testing</footer>
+  </main>
+</div>
+</body>
+</html>
